@@ -85,7 +85,7 @@ code {
   bottom: -27px;
   z-index: 0;
   opacity: 0.5;
-  background-image: url(/img/bg-2.png);
+  background-image: url(../img/bg-2.png);
   background-repeat: repeat;
   background-position: center;
   background-size: 100px auto;
@@ -191,7 +191,7 @@ code {
   bottom: -27px;
   z-index: 0;
   opacity: 0.03;
-  background-image: url(/img/bg.png);
+  background-image: url(../img/bg.png);
   background-repeat: repeat;
   background-position: center;
   background-size: 100px auto;
