@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BrickCols.js</title>
+
+	<link rel="stylesheet" href="./css/css.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header__bg"></div>
+		<h1 class="title">BrickCols.js</h1>
+		<div class="description description_block">
+			<p>Инструмент, который позволит Вам без всяких проблем отсортировать и выложить в виде кирпичной кладки элементы блока.</p>
+			<p>Нужно лишь подключить скрипт к странице и указать, где и что нужно рассположить упорядоченной колоной.</p>
+			<p>Абсолютно все стили прописываются в CSS и не требуется указывание каких-либо свойств в JS.</p>
+		</div>
+	</header>
+	
+	<nav class="nav">
+		<a href="./brickcols.js" download class="nav__link">Скачать</a>
+		<a href="https://github.com/ms27/BrickCols.js" class="nav__link">GitHub</a>
+	</nav>
+
+	<div class="wrap">
+		<div class="how_to__wrap">
+			<h2 class="how_to__header">Как использовать:</h2>
+			<div class="how_to__content">
+				<ol class="how_to__list">
+					<li data-list-item="1" class="how_to__list_item">
+						Как обычно, чтобы использовать скрипт, его необходимо сначала скачать.<br>
+						Сделать это можно либо нажав на соответсвующую кнопуку на странице, либо перейтя в репозиторий проекта на ГитХаб-е.
+					</li>
+					<li data-list-item="2" class="how_to__list_item">
+						После того, как Вы завладели исходниками, нужно подключить их к вашему проекту.<br>
+						Для этого Вам нужно прописать на всех страницах путь к скаченному js-файлу, делать это нужно только для тех страниц, где вы собираетесь использовать скрипт.<br>
+						Например, перед закрывающимся тегом body, так:
+						<pre><code class="language-markup">	...
+	&lt;script src="/js/brickcols.js">&lt;/script>
+&lt/body>
+&lt/html></code></pre>
+					</li>
+					<li data-list-item="3" class="how_to__list_item">
+						После проделанных операций, на подключённых страницах будет доступен объект BrickCols, в котором будут 2 необходимые Вам функции: auto_prioritize() и layout_optimization(). В большенстве случаев, Вам нужна будет только 2-ая из них.<br>
+						Если ввести в консоль браузера:
+						<pre><code class="language-javascript">console.log(BrickCols);</code></pre>
+						то будет выведен объект.
+					</li>
+					<li data-list-item="4" class="how_to__list_item">
+						Но, прежде чем задействовать скрипт, нужно разобраться с html разметкой… Структура проста и максимально гибка:<br>
+						<pre><code class="language-markup"><элемент_1 class="класс_обёртки">
+	<элемент_2 class="класс_колонки">
+		<элемент_3 class="класс_сортируемых_блоков" data-priority="заданный_приоритет">
+			любое содержимое
+		<&#47элемент_3>
+		<элемент_3 class="класс_сортируемых_блоков" data-priority="1">
+			любое содержимое
+		<&#47элемент_3>
+		<элемент_3 class="класс_сортируемых_блоков">
+			любое содержимое
+		<&#47элемент_3>
+		...
+		<элемент_3 class="класс_сортируемых_блоков" data-priority="2">
+			любое содержимое
+		<&#47элемент_3>
+	<&#47элемент_2>
+<&#47элемент1></code></pre>
+					</li>
+					<li data-list-item="4.1" class="how_to__list_item m--sub">
+						Можно использовать id вместо class у элемента обёртки, вот так:<br>
+						<pre><code class="language-markup"><элемент_1 id="идентификатор_обёртки">
+	..
+<&#47элемент1></code></pre>
+						Но мне не кажется хорошей данная идея, так как, для данного скрипта, class является более мощным инструментом.
+					</li>
+					<li data-list-item="4.2" class="how_to__list_item m--sub">
+						Вы могли заметить, что в структуре используюется такой аттрибут, как data-priority. Данный деталь отвечает за позицию, который займёт элемент относительно начала. Указание этого аттрибута - необязательно, но эта штука очень пригодится, если Вам нужно будет поднять какой-нибудь элемент в начала, несмотря на то, что в html-разметке он будет находится где-нибудь внизу.<br>
+						Как это работает на практике, Вы сможете понять в соответсвтующем разделе.<br>
+					<li data-list-item="4.3" class="how_to__list_item m--sub">
+						Стоит обратить внимание на то, что если элементам не заданы приоритеты по умолчанию, то скрипт это сделает за Вас. В таком случае, приоритеты будут расставлены в порядке нахождения элементов в DOM.<br>
+						Причём, элементы, которые уже имеют заданные Вами приоритеты, - тронуты не будут… Ваши приоритеты - в приоритете!
+					</li>
+					<li data-list-item="4.4" class="how_to__list_item m--sub">
+						Автоматическим образом назначаются только свободные, отсутствующие, приоритеты. То есть, если уже имеет элементы с 1-го по 7-приоритеты и с 9 по 13, то элемент, без заданного Вами приоритета, получит 8-ой, самый ближайший к началу.
+					</li>
+					<li data-list-item="5" class="how_to__list_item">
+						В основном скрипте страницы, нужно всего лишь использовать следующую конструкцию, чтобы задействовать скрипт:<br>
+						<pre><code class="language-javascript">BrickCols.layout_optimization('.класс_обёртки', '.класс_колонки', '.класс_сортируемых_блоков');</code></pre>
+					</li>
+				</ol>
+			</div>
+		</div>
+		
+		<div class="demonstration">
+			<h2 class="demonstration__header">Демонстрация:</h2>
+			<div class="demonstration__description description_block">
+				<p>В данном разделе, предлагаю Вам посмотреть на работу скрипта.<br>
+				Лучше всего протестировать его получится, если Вы попробует поизменять размеры окна обраузера и проследить за именениями.</p>
+				<p>Здесь представленны различные блоки с сортированнными элементами. Стоит обращать внимание на заголовки элементов, особенно не те, которые содержат в себ">>", у данных элементов стоит почитать и их содержимое.</p>
+				<p>Для сортировки всех представленных демонстрационных "таблиц", использовалась всего одна строчка в JS:</p>
+				<pre><code class="language-javascript">BrickCols.layout_optimization('.sorted_table', '.sorted_table__col', '.sorted_table__block');</code></pre>	
+				<p>Другими словами, абсолютно не важно, на сколько схожи сортируемые "таблицы", как сильно отличаются их CSS свойства. Нет разницы вообще, ведь скрипт работает с каждым блоком-таблицей по отдельности.<br>По этой причине предлагаю использовать class, а не id, чтобы просто указывать один класс для всех сортируемых блоков и всего один раз прописать действие в JS-коде.</p>
+			</div>
+			<h3>Блок элементов, с заранее заданными приоритетами</h3>
+			<div class="sorted_table m--1">
+				<div class="sorted_table__col">
+					<div data-priority="1" class="sorted_table__block">
+						<p class="table_header">Priority 1</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit molestias, ratione deleniti cupiditate ad perspiciatis fugiat explicabo officiis consequatur quasi ducimus alias omnis eum rerum fugit deserunt! Iusto, alias, recusandae.Dolores recusandae expedita perspiciatis nemo eligendi aliquid, odio quasi libero facere modi pariatur assumenda minima dolorem at harum ullam impedit praesentium quidem molestias fugit hic nesciunt. Ut, illum quibusdam dolorum.Repellendus cum dicta nemo quos alias. Nulla eligendi ipsa unde praesentium, velit adipisci corporis veritatis cum, odio quas labore, fuga magnam vel iure delectus similique ipsum. Velit, saepe itaque dignissimos.
+					</div>
+					<div class="sorted_table__block m--important">
+						<p class="table_header">>> Without priority (2)</p>
+						У этого блока не задан приоритет по умолчанию. Скрипт умён, чтобы решить эту проблему… Он находит свободный номер и присваивает его элементу. В данном случае, самым близким оказался 2-ой приоритет. Кстати, в структуре html-кода, элемент также рассположен на 2-ой позиции.
+					</div>
+					<div data-priority="4" class="sorted_table__block">
+						<p class="table_header">Priority 4</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam quibusdam tempora repellat maxime dolores harum beatae quidem non earum accusantium animi fugiat, consectetur voluptatem iste nobis perferendis. Suscipit, laudantium, ipsam?Porro ipsa pariatur, eius veritatis cum sapiente similique deserunt, harum corrupti aspernatur ullam laboriosam consequuntur deleniti nulla ratione labore iste excepturi laudantium voluptas odio dolorem quos. Odio voluptates cum quidem.
+					</div>
+					<div data-priority="5" class="sorted_table__block">
+						<p class="table_header">Priority 5</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt error repellat quibusdam accusantium earum fugiat culpa eius nulla ipsum illum quaerat alias blanditiis, nesciunt quae aliquam minus, voluptate non maxime.
+					</div>
+					<div data-priority="13" class="sorted_table__block">
+						<p class="table_header">Priority 13</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui sapiente libero necessitatibus numquam quos harum aliquid eius quam eos doloremque, nostrum est illum rem? Tempora dolorum necessitatibus praesentium culpa, magnam?Ea perspiciatis possimus rerum officiis, id! Itaque maxime amet voluptatem, commodi vel beatae repellendus illo, dolores tempore dolorum, architecto quam. In a veniam quaerat praesentium officia omnis, facilis molestias delectus.Amet quibusdam rerum incidunt nesciunt fugiat quia molestiae sequi totam sit voluptates illo sunt non, dolore vitae dolorem quod esse a sint. Aut ipsum, facere porro iusto voluptas excepturi, quae.Repellat voluptate iusto aliquam, ipsum eum eius quasi ducimus repudiandae quisquam, vitae illo voluptates commodi veniam! Ea voluptatibus, delectus quo voluptas minus quae suscipit qui, excepturi totam temporibus, repellendus quisquam?
+					</div>
+					<div data-priority="7" class="sorted_table__block">
+						<p class="table_header">Priority 7</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum minus repudiandae magni temporibus qui. Vel minus ab rem ad facere, vero suscipit dolores quam, sunt excepturi amet nesciunt quia commodi.Sapiente dolores officia expedita porro perspiciatis provident, aut quidem, autem nisi voluptates quaerat, sed, ex nobis voluptatibus deserunt dignissimos magnam perferendis laborum obcaecati tenetur tempore fugiat cupiditate! Ea, consequatur, blanditiis.
+					</div>
+					<div data-priority="23" class="sorted_table__block">
+						<p class="table_header">Priority 23</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, molestiae repellat totam adipisci asperiores molestias dolores quo laudantium libero neque quisquam nobis non illo ratione similique perferendis ut, itaque error.
+					</div>
+					<div data-priority="3" class="sorted_table__block m--important">
+						<p class="table_header">>> Priority 3</p>
+						Данный блок отличается тем, что он рассположен (в html-структуре) под элементом с 23 приоритетом. Но, так как блок имеет более высокий приоритет, то скрипт его поднимает наверх, как это и должно быть.
+					</div>
+					<div data-priority="27" class="sorted_table__block">
+						<p class="table_header">Priority 27</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia placeat cum, ex nostrum sunt magni deserunt voluptates maiores vel ipsum porro neque, hic, numquam nulla animi aliquam? Veritatis, accusamus, corporis.
+					</div>
+					<div class="sorted_table__block m--important">
+						<p class="table_header">>> Without priority (6)</p>
+						Данный блок в структуре html рассположен в самом конце. Иначе говоря, до работы скрипта, по отношению к этому элементу был актуален CSS-псевдо-селектор :last-child. Также, у данного элемента изначально отстутствует приоритет. Несмотря на это, скрипт нашёл ему дом - 6 позиция, свободная.
+					</div>
+				</div>
+			</div>
+			
+			<h3>Без заданных заранее приоритетов</h3>
+			<div class="sorted_table m--2">
+				<div class="sorted_table__col">
+					<div class="sorted_table__block m--important">
+						<p class="table_header">>> Without priority (2)</p>
+						А это блок неудачник… Я его напечатал самым первым при написании разметки, но он всё равно уступил свою позицию. Теперь он второй. Эх!
+					</div>
+					<div class="sorted_table__block m--important" data-priority="7">
+						<p class="table_header">>> Priority 7</p>
+						Вы не поверите, но в списке элементов данной таблицы, это блок был вторым. Однако, ему не повезло, он родился с 7-ым приоритетом и, как следствие, был опущен скриптом на свою позицию.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (3)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam quibusdam tempora repellat maxime dolores harum beatae quidem non earum accusantium animi fugiat, consectetur voluptatem iste nobis perferendis. Suscipit, laudantium, ipsam?Porro ipsa pariatur, eius veritatis cum sapiente similique deserunt, harum corrupti aspernatur ullam laboriosam consequuntur deleniti nulla ratione labore iste excepturi laudantium voluptas odio dolorem quos. Odio voluptates cum quidem.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (4)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt error repellat quibusdam accusantium earum fugiat culpa eius nulla ipsum illum quaerat alias blanditiis, nesciunt quae aliquam minus, voluptate non maxime.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (5)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui sapiente libero necessitatibus numquam quos harum aliquid eius quam eos doloremque, nostrum est illum rem? Tempora dolorum necessitatibus praesentium culpa, magnam?Ea perspiciatis possimus rerum officiis, id! Itaque maxime amet voluptatem, commodi vel beatae repellendus illo, dolores tempore dolorum, architecto quam. In a veniam quaerat praesentium officia omnis, facilis molestias delectus.Amet quibusdam rerum incidunt nesciunt fugiat quia molestiae sequi totam sit voluptates illo sunt non, dolore vitae dolorem quod esse a sint. Aut ipsum, facere porro iusto voluptas excepturi, quae.Repellat voluptate iusto aliquam, ipsum eum eius quasi ducimus repudiandae quisquam, vitae illo voluptates commodi veniam! Ea voluptatibus, delectus quo voluptas minus quae suscipit qui, excepturi totam temporibus, repellendus quisquam?
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (6)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum minus repudiandae magni temporibus qui. Vel minus ab rem ad facere, vero suscipit dolores quam, sunt excepturi amet nesciunt quia commodi.Sapiente dolores officia expedita porro perspiciatis provident, aut quidem, autem nisi voluptates quaerat, sed, ex nobis voluptatibus deserunt dignissimos magnam perferendis laborum obcaecati tenetur tempore fugiat cupiditate! Ea, consequatur, blanditiis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">PWithout priority (8)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, molestiae repellat totam adipisci asperiores molestias dolores quo laudantium libero neque quisquam nobis non illo ratione similique perferendis ut, itaque error.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (9)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia placeat cum, ex nostrum sunt magni deserunt voluptates maiores vel ipsum porro neque, hic, numquam nulla animi aliquam? Veritatis, accusamus, corporis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (10)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia placeat cum, ex nostrum sunt magni deserunt voluptates maiores vel ipsum porro neque, hic, numquam nulla animi aliquam? Veritatis, accusamus, corporis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (11)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum minus repudiandae magni temporibus qui. Vel minus ab rem ad facere, vero suscipit dolores quam, sunt excepturi amet nesciunt quia commodi.Sapiente dolores officia expedita porro perspiciatis provident, aut quidem, autem nisi voluptates quaerat, sed, ex nobis voluptatibus deserunt dignissimos magnam perferendis laborum obcaecati tenetur tempore fugiat cupiditate! Ea, consequatur, blanditiis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (12)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, molestiae repellat totam adipisci asperiores molestias dolores quo laudantium libero neque quisquam nobis non illo ratione similique perferendis ut, itaque error.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (13)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia placeat cum, ex nostrum sunt magni deserunt voluptates maiores vel ipsum porro neque, hic, numquam nulla animi aliquam? Veritatis, accusamus, corporis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (14)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam soluta dignissimos aperiam ab eveniet, nisi repellat quasi, voluptatem, error dolorum veritatis perspiciatis praesentium saepe consequatur eligendi fugit ratione dolor ducimus.Nobis vero quo accusantium, ratione nam necessitatibus fugit dolorem, excepturi ipsa itaque nostrum impedit quis, voluptates beatae veniam quidem tempora explicabo quos fuga? Qui omnis soluta iusto fugit distinctio porro.Dolorem asperiores illum eaque blanditiis repellat repellendus sapiente dolorum neque, autem, aut! Iusto iure voluptatum distinctio quod alias explicabo suscipit fugit, earum accusamus illo porro neque, nam facere omnis iste!Culpa dignissimos consequatur aspernatur distinctio, est nulla at earum excepturi blanditiis laborum quis facilis quod non, tenetur itaque explicabo autem odit eos numquam. Saepe, voluptas unde ipsa. Ducimus, ad, debitis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (15)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum minus repudiandae magni temporibus qui. Vel minus ab rem ad facere, vero suscipit dolores quam, sunt excepturi amet nesciunt quia commodi.Sapiente dolores officia expedita porro perspiciatis provident, aut quidem, autem nisi voluptates quaerat, sed, ex nobis voluptatibus deserunt dignissimos magnam perferendis laborum obcaecati tenetur tempore fugiat cupiditate! Ea, consequatur, blanditiis.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">PWithout priority (16)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, molestiae repellat totam adipisci asperiores molestias dolores quo laudantium libero neque quisquam nobis non illo ratione similique perferendis ut, itaque error.
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (17)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus inventore odit veritatis voluptate quis quas, sequi asperiores praesentium nam pariatur veniam iusto ea dolore debitis, doloribus deleniti voluptates amet nulla.Rerum nemo cum, in veritatis, optio libero sapiente dolor quas quam. Tenetur dicta, eum aut molestiae optio, tempore eligendi eveniet, vel aspernatur eos temporibus. Itaque expedita sed repellendus a libero!Quasi aperiam repudiandae animi delectus ipsam voluptatibus, ratione vero voluptas consequuntur ducimus, excepturi maxime consectetur reprehenderit eveniet enim fuga impedit alias nostrum error quaerat voluptatem aliquam. Dolorum omnis impedit nemo!
+					</div>
+					<div class="sorted_table__block">
+						<p class="table_header">Without priority (18)</p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia placeat cum, ex nostrum sunt magni deserunt voluptates maiores vel ipsum porro neque, hic, numquam nulla animi aliquam? Veritatis, accusamus, corporis.
+					</div>
+					<div class="sorted_table__block m--important" data-priority="1">
+						<p class="table_header">>> Priority 1</p>
+						Примечательно то, что этот блок находился в самом конце списка элементов таблицы. Ещё интересно, что этот блок - "белая ворона", ибо среди массы блоков без приоритетов, ему он был задан, естествено, равный 1-е. Кстати, в данной таблице есть брат этого блока, он тоже имеет приоритет, только с другим значением.
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer">
+		The MIT License (MIT)<br>
+		BrickCols.js © 2016, Magomedov Said
+	</footer>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="./js/main.js"></script>
+	<script src="./brickcols.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed&subset=cyrillic" rel="stylesheet">
+	<link href="./plugins/prism.css" rel="stylesheet" />
+	<script src="./plugins/prism.js"></script>
+</body>
+</html>
