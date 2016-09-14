@@ -130,7 +130,7 @@
 				Лучше всего протестировать его получится, если Вы попробует поизменять размеры окна браузера и проследить за именениями.</p>
 				<p>Здесь представленны различные блоки с сортированными элементами. Стоит обращать внимание на заголовки элементов, особенно не те, которые содержат в себе ">>", у данных элементов стоит почитать и их содержимое.</p>
 				<p>Для сортировки всех представленных демонстрационных "таблиц", использовалась всего одна строчка в JS:</p>
-				<pre><code class="language-javascript">BrickCols.layout_optimization('.sorted_table', '.sorted_table__col', '.sorted_table__block');</code></pre>	
+				<pre class=" language-javascript"><code class=" language-javascript">BrickCols<span class="token punctuation">.</span><span class="token function">layout_optimization</span><span class="token punctuation">(</span><span class="token string">'.sorted_table'</span><span class="token punctuation">,</span> <span class="token string">'.sorted_table__col'</span><span class="token punctuation">,</span> <span class="token string">'.sorted_table__block'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>	
 				<p>Другими словами, абсолютно не важно, на сколько схожи сортируемые "таблицы", как сильно отличаются их CSS свойства. Нет разницы вообще, ведь скрипт работает с каждым блоком-таблицей по отдельности.<br>По этой причине предлагаю использовать class, а не id, чтобы просто указывать один класс для всех сортируемых блоков и всего один раз прописать действие в JS-коде.</p>
 			</div>
 			<h3>Блок элементов, с заранее заданными приоритетами</h3>
