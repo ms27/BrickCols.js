@@ -1,37 +1,52 @@
-/*! BrickCols.js v1.0.0 | (c) Magomedov Said | The MIT License (MIT) */
+/*! BrickCols.js v1.1.0 | (c) Magomedov Said | The MIT License (MIT) */
 
 var BrickCols = {
 	init: function(){
 		this._name = 'BrickCols';
 		this._description = 'Cascading grid layout without absolute positioning. You don\'t need to use any JS code to set stylesheet properties.';
-		this._version = '1.0.0';
+		this._version = '1.1.0';
 		this._autor = 'Magomedov Said';
+
+        function outer(el, property){
+            var val, style = getComputedStyle(el);
+            switch (property) {
+                case 'width':
+                    val = el.offsetWidth;
+                    val += parseInt(style.marginLeft) + parseInt(style.marginRight);
+                    break;
+                case 'height':
+                    val = el.offsetHeight;
+                    val += parseInt(style.marginTop) + parseInt(style.marginBottom);
+                    break;
+                default: break;
+            }
+            return val;
+        }
 		
 		this.auto_prioritize = function(wrap, element){
-			$(wrap).each(function(){
-				var p = 1,
-					this_wrap = this;
-				$(this_wrap).find(element + ':not([data-priority])').each(function(){
-					while ($(this_wrap).find(element + '[data-priority="' + p + '"]').length){
-						p++;
-					}
-					$(this).attr('data-priority', p);
+			[wrap].forEach(function(this_wrap){
+				var p = 1;
+				this_wrap.querySelectorAll(element + ':not([data-priority])')
+                    .forEach(function(this_element){
+                        while (this_wrap.querySelectorAll(element + '[data-priority="' + p + '"]').length){
+                            p++;
+                        }
+                        this_element.setAttribute('data-priority', p);
 				});
 			});
 		};
-		this.layout_optimization = function(wrap, cell, element, callback){
-			callback = callback || false;
-			wrap += ' ';
-			var tm = this;
-			$(wrap).each(function(){
-				var this_wrap = this,
-					this_cell = $(this).find(cell),
-					this_element = $(this).find(element);
-				
-				if ($(this_wrap).find(element + ':not([data-priority])').length)
-					tm.auto_prioritize(this_wrap, element);
+		this.layout_optimization = function(wrap, col, element, callback){
+	
+            var tm = this;
+
+            document.querySelectorAll(wrap).forEach(function(this_wrap){
+                var wrap_col = this_wrap.querySelectorAll(col),
+                    wrap_element = this_wrap.querySelectorAll(element);
+
+                if (this_wrap.querySelectorAll(element + ':not([data-priority])').length)
+                    tm.auto_prioritize(this_wrap, element);
 				// кол-во активных колонок:
-				var active_col = parseInt($(this_wrap).outerWidth() / $(this_cell).outerWidth(true));
+				var active_col = parseInt(this_wrap.offsetWidth / outer(wrap_col[0], 'width'));
 				// высоты колонок вывода:
 				// var col_h = Array(active_col);
 				var col_h = [];
@@ -40,17 +55,19 @@ var BrickCols = {
 					col_h[i] = 0;
 				}
 				// Если нет нужного числа колонок, то создаю их
-				for (var i = $(this_cell).length; i < active_col; i++){
-					$($(this_cell)[0]).clone().html('').appendTo(this_wrap);
+				for (var i = wrap_col.length; i < active_col; i++){
+                    var new_col = wrap_col[0].cloneNode(true);
+                    new_col.innerHTML = '';
+                    this_wrap.appendChild(new_col);
 				}
-
-				var el_count = $(this_element).length,
+                
+				var el_count = wrap_element.length,
 					p = 1;
-				while (el_count > 0) {
-					var el = $(this_wrap).find(element + '[data-priority="' + p + '"]');
+                while (el_count > 0) {
+                    wrap_element = this_wrap.querySelectorAll(element + '[data-priority="' + p + '"]');
 
-					if (el.length){
-						$(el).each(function(){
+					if (wrap_element.length){
+						[wrap_element].forEach(function(this_element){
 							// дефолтная минимальная колонка - первая:
 							var min = col_h[0],	// значение высоты
 								col_i = 0;	// индекс
@@ -64,17 +81,18 @@ var BrickCols = {
 								}
 							}
 							// увеличиваю значение высоты колонки
-							col_h[col_i] += $(this).outerHeight(true);
+							col_h[col_i] += outer(this_element[0], 'height');
 							// добавляю элемент в нужную колонку
-							$(this_wrap).find(cell + ':nth-child(' + ++col_i + ')')
-								.append($(this));
+							var this_col = this_wrap.querySelector(col + ':nth-child(' + ++col_i + ')');
+								this_col.appendChild(this_element[0]);
 							el_count -= 1;
 						});
-					}
+                    }
 					p++;
-				}
-			});
-			if (callback) callback(true);
+                }
+            });
+			if (callback)
+                callback();
 		};
 	}
 };
