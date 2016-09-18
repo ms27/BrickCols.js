@@ -14,6 +14,7 @@ Cascading grid layout without absolute positioning. You don't need to use any JS
 * Небольшое изменение index.html. Но это не точно
 
 #### Версия 2.0.1
+* Оптимизация под IE и Edge. (поддержка IE 9 и выше)
 
 ## ToDo
 * Исправить ошибки в текстах демо-страницы
