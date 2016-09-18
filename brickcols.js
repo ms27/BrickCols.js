@@ -1,10 +1,10 @@
-/*! BrickCols.js v1.1.0 | (c) Magomedov Said | The MIT License (MIT) */
+/*! BrickCols.js v2.0.1 | (c) Magomedov Said | The MIT License (MIT) */
 
 var BrickCols = {
 	init: function(){
 		this._name = 'BrickCols';
 		this._description = 'Cascading grid layout without absolute positioning. You don\'t need to use any JS code to set stylesheet properties.';
-		this._version = '1.1.0';
+		this._version = '2.0.1';
 		this._autor = 'Magomedov Said';
 
         function outer(el, property){
@@ -22,11 +22,11 @@ var BrickCols = {
             }
             return val;
         }
-		
+
 		this.auto_prioritize = function(wrap, element){
 			[wrap].forEach(function(this_wrap){
 				var p = 1;
-				this_wrap.querySelectorAll(element + ':not([data-priority])')
+				Array.prototype.slice.call(this_wrap.querySelectorAll(element + ':not([data-priority])'))
                     .forEach(function(this_element){
                         while (this_wrap.querySelectorAll(element + '[data-priority="' + p + '"]').length){
                             p++;
@@ -39,7 +39,8 @@ var BrickCols = {
 	
             var tm = this;
 
-            document.querySelectorAll(wrap).forEach(function(this_wrap){
+			// Array.prototype.slice.call() - решает! после использования данной функции, скрипт заработал и в IE с Edge
+            Array.prototype.slice.call(document.querySelectorAll(wrap)).forEach(function(this_wrap){
                 var wrap_col = this_wrap.querySelectorAll(col),
                     wrap_element = this_wrap.querySelectorAll(element);
 
