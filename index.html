@@ -1,4 +1,4 @@
-<!--2.0.1-->
+<!--2.1.0-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,7 +86,7 @@
 						Но мне не кажется хорошей данная идея, так как, для данного скрипта, class является более мощным инструментом.
 					</li>
 					<li data-list-item="4.2" class="how_to__list_item m--sub">
-						Вы могли заметить, что в структуре используется такой аттрибут, как data-priority. Данный деталь отвечает за позицию, который займёт элемент относительно начала. Указание этого аттрибута - необязательно, но эта штука очень пригодится, если Вам нужно будет поднять какой-нибудь элемент в начала, несмотря на то, что в html-разметке он будет находится где-нибудь внизу.<br>
+						Вы могли заметить, что в структуре используется такой атрибут, как data-priority. Данный деталь отвечает за позицию, который займёт элемент относительно начала. Указание этого атрибута - необязательно, но эта штука очень пригодится, если Вам нужно будет поднять какой-нибудь элемент в начала, несмотря на то, что в html-разметке он будет находится где-нибудь внизу.<br>
 						Как это работает на практике, Вы сможете понять в соответствующем разделе.<br>
 					</li><li data-list-item="4.3" class="how_to__list_item m--sub">
 						Стоит обратить внимание на то, что если элементам не заданы приоритеты по умолчанию, то скрипт это сделает за Вас. В таком случае, приоритеты будут расставлены в порядке нахождения элементов в DOM.<br>
@@ -130,16 +130,16 @@
 				Лучше всего протестировать его получится, если Вы попробует поизменять размеры окна браузера и проследить за именениями.</p>
 				<p>Здесь представленны различные блоки с сортированными элементами. Стоит обращать внимание на заголовки элементов, особенно не те, которые содержат в себе ">>", у данных элементов стоит почитать и их содержимое.</p>
 				<p>Для сортировки всех представленных демонстрационных "таблиц", использовалась всего одна строчка в JS:</p>
-				<pre><code class="language-javascript">BrickCols.layout_optimization('.sorted_table', '.sorted_table__col', '.sorted_table__block');</code></pre>	
+                <pre class=" language-javascript"><code class=" language-javascript">BrickCols<span class="token punctuation">.</span><span class="token function">layout_optimization</span><span class="token punctuation">(</span><span class="token string">'.sorted_table'</span><span class="token punctuation">,</span> <span class="token string">'.sorted_table__col'</span><span class="token punctuation">,</span> <span class="token string">'.sorted_table__block'</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 				<p>Другими словами, абсолютно не важно, на сколько схожи сортируемые "таблицы", как сильно отличаются их CSS свойства. Нет разницы вообще, ведь скрипт работает с каждым блоком-таблицей по отдельности.<br>По этой причине предлагаю использовать class, а не id, чтобы просто указывать один класс для всех сортируемых блоков и всего один раз прописать действие в JS-коде.</p>
 			</div>
-			<h3>Блок элементов, с заранее заданными приоритетами</h3>
+			<h3>Блок элементов, с заранее заданными приоритетами:</h3>
 			<div class="sorted_table m--1">
 				<div class="sorted_table__col">
 					<noindex>
-					<div data-priority="1" class="sorted_table__block">
-						<p class="table_header">Приоритет 1</p>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit molestias, ratione deleniti cupiditate ad perspiciatis fugiat explicabo officiis consequatur quasi ducimus alias omnis eum rerum fugit deserunt! Iusto, alias, recusandae.Dolores recusandae expedita perspiciatis nemo eligendi aliquid, odio quasi libero facere modi pariatur assumenda minima dolorem at harum ullam impedit praesentium quidem molestias fugit hic nesciunt. Ut, illum quibusdam dolorum.Repellendus cum dicta nemo quos alias. Nulla eligendi ipsa unde praesentium, velit adipisci corporis veritatis cum, odio quas labore, fuga magnam vel iure delectus similique ipsum. Velit, saepe itaque dignissimos.
+					<div data-priority="1" class="sorted_table__block brickcols_template">
+						<p class="table_header" data-bc-t="header">Приоритет 1</p>
+						<p data-bc-t="content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit molestias, ratione deleniti cupiditate ad perspiciatis fugiat explicabo officiis consequatur quasi ducimus alias omnis eum rerum fugit deserunt! Iusto, alias, recusandae.Dolores recusandae expedita perspiciatis nemo eligendi aliquid, odio quasi libero facere modi pariatur assumenda minima dolorem at harum ullam impedit praesentium quidem molestias fugit hic nesciunt. Ut, illum quibusdam dolorum.Repellendus cum dicta nemo quos alias. Nulla eligendi ipsa unde praesentium, velit adipisci corporis veritatis cum, odio quas labore, fuga magnam vel iure delectus similique ipsum. Velit, saepe itaque dignissimos.</p>
 					</div>
 					</noindex>
 					<div class="sorted_table__block m--important">
@@ -184,8 +184,43 @@
 					</div>
 				</div>
 			</div>
-			
-			<h3>Без заданных заранее приоритетов</h3>
+			<div class="add_new">
+				<h3>Добавить новый элемент</h3>
+				<p>Заголовок:</p>
+				<input class="add_new__header add_new__el" value="<h2>Новенький<h2>">
+				<p>Содержимое:</p>
+				<textarea class="add_new__content add_new__el"><img src="https://ms27.github.io/BrickCols.js/img/og.png"> Ну и текст какой-нибудь тут.</textarea>
+				<p class="add_new__center"><span title="Если разница между индексами приоритетов будет составлять более 200, то сортировка не будет произведена! Не нужно брать заоблачные числа, в этом нет практической пользы.">Приоритет (макс. разница между значениями = 200): <input type="number" class="add_new__priority add_new__el" max="200"></span>
+				<button class="add_new__button add_new__el">Проверяем!</button></p>
+			</div>
+            <div class="demonstration__description description_block">
+				<p>Для того, чтобы добавить новый элемент, можно использовать встроенную функцию add_new()</p>
+				<pre class=" language-javascript"><code class=" language-javascript">BrickCols<span class="token punctuation">.</span><span class="token function">add_new</span><span class="token punctuation">(</span><span class="token string">'селектор_обёртки'</span><span class="token punctuation">,</span> <span class="token string">'селектор_колоннки'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'ключ_1'</span><span class="token punctuation">,</span> <span class="token string">'действие'</span><span class="token punctuation">,</span> <span class="token string">'содержимое, которое будет всталяться'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> …<span class="token punctuation">]</span><span class="token punctuation">,</span> приоритет<span class="token operator">-</span>число<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+				<p>Разметка выглядит следующим образом:</p>
+<pre class=" language-markup"><code class=" language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>элемент_1</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>класс_обёртки<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>элемент_2</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>класс_колонны<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>элемент_3</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>класс_сортируемых_блоков brickcols-template<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+			<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>элемент_4</span> <span class="token attr-name">data-bc-t</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>ключ_1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>…<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>элемент_4</span><span class="token punctuation">&gt;</span></span>
+			<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>элемент_4</span> <span class="token attr-name">data-bc-t</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>ключ_2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>…<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>элемент_4</span><span class="token punctuation">&gt;</span></span>
+			…
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>элемент_3</span><span class="token punctuation">&gt;</span></span>
+		…
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>элемент_3</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>класс_сортируемых_блоков<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+			любое содержимое
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>элемент_3</span><span class="token punctuation">&gt;</span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>элемент_2</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>элемент1</span><span class="token punctuation">&gt;</span></span></code></pre>
+				<p>Название ключам можно задавать любое, кроме 'this', так как оно закреплено для действий с блоком шаблона (которому и присвоен class="brickcols-template")</p>
+				<p>В качестве действий, доступны значения: html, class, href, src. html - вставит требуемое содиржимое во внутрь. class - задаст класс, равный содержимому. href - содержимое будет выведено в одноимённый атрибут. src - аналогично href, но уже для src. Содержимое, это 2-ой элемент массива в массиве, если начинать счёт с 0 (нуля). (см.пример кода)</p>
+				<p>Четвёртый параметр функции - приоритет, если необходимо его задать точно. Если же не задавать приоритета, то он будет автоматически добавлен в самую короткую колоннку. При заданном вручную приоритете, нужно снова вызвать функцию сортировки, чтобы блок задял своё положение.</p>
+<pre class=" language-js"><code class=" language-js">…
+	BrickCols<span class="token punctuation">.</span><span class="token function">add_new</span><span class="token punctuation">(</span>…<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	BrickCols<span class="token punctuation">.</span><span class="token function">layout_optimization</span><span class="token punctuation">(</span>…<span class="token punctuation">)</span><span class="token punctuation">;</span>
+…</code></pre>
+				<p>Если Вас устраивает, как работают демки на данной странице, то Вы всегда можете просмотреть исходный код js-файла, которой реализует это на ней. Файлик находится там -&gt; <a href="https://github.com/ms27/BrickCols.js/blob/master/js/main.js" target="_blank">здесь</a>.</p>
+			</div>
+
+			<h3>Без заданных заранее приоритетов:</h3>
 			<div class="sorted_table m--2">
 				<div class="sorted_table__col">
 					<div class="sorted_table__block m--important">

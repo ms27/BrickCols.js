@@ -15,6 +15,10 @@ body {
   font-family: 'Roboto Condensed', Calibri, sans-serif;
 }
 
+body img {
+  width: 100%;
+}
+
 @media (max-width: 450px) {
   body {
     font-size: 13px;
@@ -91,7 +95,7 @@ code {
   bottom: -27px;
   z-index: 0;
   opacity: 0.5;
-  background-image: url(../img/bg-2.png);
+  background-image: url(../img/bg-2.jpg);
   background-repeat: repeat;
   background-position: center;
   background-size: 100px auto;
@@ -197,7 +201,7 @@ code {
   bottom: -27px;
   z-index: 0;
   opacity: 0.03;
-  background-image: url(../img/bg.png);
+  background-image: url(../img/bg.jpg);
   background-repeat: repeat;
   background-position: center;
   background-size: 100px auto;
@@ -217,6 +221,61 @@ code {
 
 .demonstration__description::before, .demonstration__description::after {
   background: rgba(255, 255, 255, 0.5);
+}
+
+.add_new {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: calc(10px + 1vh);
+  margin-bottom: calc(10px + 3vh);
+}
+
+.add_new__el {
+  margin: 5px 0 15px;
+  padding: 11px 17px;
+  resize: none;
+  max-height: 300px;
+  max-height: 30vh;
+  overflow: auto;
+  font-size: 1em;
+  font-family: inherit;
+  border-radius: 7px;
+  border: 2px solid rgba(23, 100, 105, 0.2);
+  background: #fff;
+}
+
+.add_new__content {
+  min-height: 3em;
+  resize: vertical;
+}
+
+.add_new__header, .add_new__content {
+  display: block;
+  width: 100%;
+}
+
+.add_new__center {
+  text-align: center;
+}
+
+.add_new__priority {
+  width: 7em;
+}
+
+.add_new__button {
+  width: auto;
+  margin: 0 auto;
+  background-color: #176469;
+  color: #fff;
+  cursor: pointer;
+}
+
+.add_new__button:hover {
+  background-color: #1a7076;
+}
+
+.add_new__button:active {
+  background-color: #166065;
 }
 
 .footer {
@@ -327,17 +386,21 @@ code {
   content: '';
   position: absolute;
   display: none;
-  bottom: 0;
+  top: -15px;
+  bottom: -3px;
   left: -100vw;
   right: -100vw;
   z-index: 23;
-  border-bottom: 1px dashed #f00;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+  border-width: 3px 0;
+  border-style: dashed;
+  border-color: #00f #0f0 #f00;
+  pointer-events: none;
+  opacity: 0.3;
 }
 
 .sorted_table__block::after {
+  top: -3px;
   bottom: -15px;
-  border-color: #0f0;
 }
 
 .sorted_table__block:hover::before, .sorted_table__block:hover::after {

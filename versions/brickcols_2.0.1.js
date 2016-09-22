@@ -1,17 +1,10 @@
-/*!
- * BrickCols.js v2.1.0 | (c) Magomedov Said | The MIT License (MIT)
- * 
- * В общем, нужно решить проблему, возникающую на 80 строке (сейчас она является комментом): wrap_col.appendChild(template);
- * Суть проблемы: при открытие инструментов разработчика (или ещё каких-либо действий, возможно), вкладка подвисает.
- * После подвиса, браузер начинает активно грузить систему.
- * Удалось выяснить, что данная проблема возникает из-за функции layout_optimization(). Если её не вызывать, то проблем со строкой не возникает.
- */
+/*! BrickCols.js v2.0.1 | (c) Magomedov Said | The MIT License (MIT) */
 
 var BrickCols = {
 	init: function(){
 		this._name = 'BrickCols';
 		this._description = 'Cascading grid layout without absolute positioning. You don\'t need to use any JS code to set stylesheet properties.';
-		this._version = '2.1.0';
+		this._version = '2.0.1';
 		this._autor = 'Magomedov Said';
 
         function outer(el, property){
@@ -30,56 +23,6 @@ var BrickCols = {
             return val;
         }
 
-		this.add_new = function(wrap, col, content, template, priority){
-			if (!Array.isArray(content))
-				return false;
-			wrap = document.querySelector(wrap);
-			if (template)
-				template = document.querySelector('[data-brickcols-template="'+ template +'"]');
-			else
-				template = wrap.querySelector('.brickcols_template');
-			if (!template)
-				return false;
-			template = template.cloneNode(true);
-			content.forEach(function(child, item){
-				if (!(child[0] && child[1] && child[2])) return false;
-				var template_el = template.querySelectorAll('[data-bc-t="'+ child[0] +'"');
-				Array.prototype.slice.call(template_el).forEach(function(template_el){ // fuck this line
-					switch (child[1]) {
-						case 'html':
-							template_el.innerHTML = child[2];
-							break;
-						case 'href':
-							template_el.setAttribute('href', child[2]);
-							break;
-						case 'src':
-							template_el.setAttribute('src', child[2]);
-							break;
-						case 'class':
-							if (template_el.classList) el.classList.add(child[2]); else template_el.className += ' ' + child[2];
-							break;
-						case 'remove_class':
-							if (template_el.classList) el.classList.remove(child[2]); else template_el.className = template_el.className.replace(new RegExp('(^|\\b)' + child[2].split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-							break;
-					}
-				});
-			});
-			priority = priority || '';
-			template.setAttribute('data-priority', priority);
-			template.classList.remove('brickcols_template');
-			var col_min_index = 0,
-				col_min_height = wrap.querySelector(col).offsetHeight;
-			Array.prototype.slice.call(wrap.querySelectorAll(col +':not(:empty)'))
-				.forEach(function(this_col, i){
-					if (this_col.offsetHeight < col_min_height){
-						col_min_height = this_col.offsetHeight;
-						col_min_index = i;
-					}
-			});
-			var wrap_col = wrap.querySelector(col + ':nth-child('+ (++col_min_index) +')');
-			// wrap_col.appendChild(template);
-			return true;
-		};
 		this.auto_prioritize = function(wrap, element){
 			[wrap].forEach(function(this_wrap){
 				var p = 1;
